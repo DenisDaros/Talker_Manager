@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const crypto = require('crypto');
 const { readTalkers } = require('./utils/fsUtils');
 const routeTalkers = require('../talker.json');
 
@@ -33,6 +34,11 @@ app.get('/talker/:id', (req, res) => {
   } else {
     res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   }
+});
+
+app.post('/login', (_req, res) => {
+  const token = crypto.randomBytes(8).toString('hex');
+  res.status(200).json({ token });
 });
 
 module.exports = app;
