@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const crypto = require('crypto');
 const { readTalkers } = require('./utils/fsUtils');
 const routeTalkers = require('../talker.json');
+const validEmail = require('./middlewares/validateEmail');
+const validPassword = require('./middlewares/validatePassword');
 
 const app = express();
 app.use(bodyParser.json());
@@ -36,7 +38,7 @@ app.get('/talker/:id', (req, res) => {
   }
 });
 
-app.post('/login', (_req, res) => {
+app.post('/login', validEmail, validPassword, (_req, res) => {
   const token = crypto.randomBytes(8).toString('hex');
   res.status(200).json({ token });
 });
