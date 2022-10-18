@@ -1,10 +1,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
-const { readTalkers } = require('./utils/fsUtils');
+const { readTalkers, writeNewTalkers } = require('./utils/fsUtils');
 const routeTalkers = require('../talker.json');
 const validEmail = require('./middlewares/validateEmail');
 const validPassword = require('./middlewares/validatePassword');
+const validToken = require('./middlewares/validateToken');
+const validName = require('./middlewares/validateName');
+const validAge = require('./middlewares/validateAge');
+const validTalk = require('./middlewares/validateTalk');
+const validWatchedAt = require('./middlewares/validateWatchedAt');
+const validRate = require('./middlewares/validateRate');
 
 const app = express();
 app.use(bodyParser.json());
@@ -38,9 +44,22 @@ app.get('/talker/:id', (req, res) => {
   }
 });
 
-app.post('/login', validEmail, validPassword, (_req, res) => {
+app.post('/login', validEmail, validPassword, (req, res) => {
   const token = crypto.randomBytes(8).toString('hex');
   res.status(200).json({ token });
 });
+
+app.post('/talker',
+ validToken,
+ validName,
+ validAge,
+ validTalk,
+ validWatchedAt,
+ validRate,
+ async (req, res) => {
+const writeTalker = req.body;
+const newWriteTalker = await writeNewTalkers(writeTalker);
+res.status(201).json(newWriteTalker);
+}); 
 
 module.exports = app;

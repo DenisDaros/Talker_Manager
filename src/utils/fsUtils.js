@@ -20,9 +20,11 @@ async function readTalkers() {
 async function writeNewTalkers(newTalker) {
     try {
         const existingTalkers = await readTalkers();
-        const allTalkers = JSON.stringify([...existingTalkers, newTalker]);
+        const newTalkerWithId = { id: existingTalkers.length + 1, ...newTalker };
+        const writeTalker = JSON.stringify([...existingTalkers, newTalkerWithId]);
 
-        await fs.writeFile((pathTalker, 'utf-8'), allTalkers);
+        await fs.writeFile(pathTalker, writeTalker);
+        return newTalkerWithId;
     } catch (error) {
     console.error(`Erro na escrita do arquivo: ${error}`);
     } 
