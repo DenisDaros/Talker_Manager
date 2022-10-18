@@ -30,7 +30,23 @@ async function writeNewTalkers(newTalker) {
     } 
 }
 
+async function upDateTalker(edit, id) {
+    try {
+        const existingTalkers = await readTalkers();
+        const newTableTalkers = existingTalkers.filter((i) => i.id !== id);
+
+        const editTalkerWithId = { id, ...edit };
+        const teste = JSON.stringify([...newTableTalkers, editTalkerWithId]);
+        await fs.writeFile((pathTalker), teste);
+        console.log('olá');
+        return editTalkerWithId;
+    } catch (error) {
+        console.error(`Erro na escrita do arquivo: ${error}`);
+    }
+}
+
 module.exports = {
     readTalkers,
     writeNewTalkers,
+    upDateTalker,
 };

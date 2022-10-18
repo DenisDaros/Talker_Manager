@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
-const { readTalkers, writeNewTalkers } = require('./utils/fsUtils');
+const { readTalkers, writeNewTalkers, upDateTalker } = require('./utils/fsUtils');
 const routeTalkers = require('../talker.json');
 const validEmail = require('./middlewares/validateEmail');
 const validPassword = require('./middlewares/validatePassword');
@@ -62,4 +62,17 @@ const newWriteTalker = await writeNewTalkers(writeTalker);
 res.status(201).json(newWriteTalker);
 }); 
 
+app.put('/talker/:id',
+validToken,
+ validName,
+ validAge,
+ validTalk,
+ validWatchedAt,
+ validRate, async (req, res) => {
+  const editTalker = req.body;
+  const { id } = req.params;
+   const newTalker = await upDateTalker(editTalker, Number(id));
+  res.status(200).json(newTalker);
+});
+  
 module.exports = app;
