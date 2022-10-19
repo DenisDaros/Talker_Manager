@@ -44,9 +44,19 @@ async function upDateTalker(edit, id) {
         console.error(`Erro na escrita do arquivo: ${error}`);
     }
 }
+async function deleteTalker(id) {
+    try {
+        const existingTalkers = await readTalkers();
+        const newTableTalkers = existingTalkers.filter((i) => i.id !== id);
+        await fs.writeFile(pathTalker, JSON.stringify(newTableTalkers));
+    } catch (error) {
+        console.error(`Erro na escrita do arquivo: ${error}`);
+    }
+}
 
 module.exports = {
     readTalkers,
     writeNewTalkers,
     upDateTalker,
+    deleteTalker,
 };
