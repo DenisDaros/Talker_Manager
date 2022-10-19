@@ -54,9 +54,15 @@ async function deleteTalker(id) {
     }
 }
 
+async function searchTalker(search) {
+    const existingTalkers = await readTalkers();
+    return existingTalkers.filter((item) => item.name.includes(search));
+}
+
 module.exports = {
     readTalkers,
     writeNewTalkers,
     upDateTalker,
     deleteTalker,
+    searchTalker,
 };

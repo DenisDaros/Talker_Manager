@@ -1,7 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
-const { readTalkers, writeNewTalkers, upDateTalker, deleteTalker } = require('./utils/fsUtils');
+const { readTalkers,
+   writeNewTalkers,
+   upDateTalker,
+   deleteTalker,
+   searchTalker } = require('./utils/fsUtils');
 const routeTalkers = require('../talker.json');
 const validEmail = require('./middlewares/validateEmail');
 const validPassword = require('./middlewares/validatePassword');
@@ -28,10 +32,16 @@ app.listen(PORT, () => {
   console.log('Online');
 });
 
-app.get('/talker', async (_req, res) => {
-const talkers = await readTalkers();
+app.get('/talker/search', validToken, async (req, res) => {
+  const { q } = req.query;
+  const talkers = await searchTalker(q);
+  res.status(200).json(talkers);
+});  
 
-return res.status(HTTP_OK_STATUS).json(talkers);
+app.get('/talker', async (_req, res) => {
+  const talkers = await readTalkers();
+  
+  return res.status(HTTP_OK_STATUS).json(talkers);
 });
 
 app.get('/talker/:id', (req, res) => {
@@ -80,5 +90,5 @@ app.delete('/talker/:id', validToken, async (req, res) => {
   await deleteTalker(Number(id));
   res.status(204).json();
 });
-  
+
 module.exports = app;
